@@ -64,7 +64,7 @@ class ChoreSerializer(serializers.ModelSerializer):
 
 
 class RoomSerializer(serializers.ModelSerializer):
-    chores = ChoreSerializer(many=True)
+    chores = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
@@ -75,6 +75,15 @@ class RoomSerializer(serializers.ModelSerializer):
             "chores",
             "get_absolute_url",
         )
+
+    def get_chores(self, obj):
+        data = ChoreSerializer(obj.chores, many=True).data
+
+        sorted_data = sorted(
+            data,
+            key=lambda x: x['status'],
+        )
+        return sorted_data
 
 
 class HistoryEntrySerializer(serializers.ModelSerializer):
