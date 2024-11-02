@@ -16,7 +16,7 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+          echo "$ACTIONS_DEPLOY_KEY" | tr -d '\r' | ssh-add -
           echo "$SERVER_SSH_KEY" >> ~/.ssh/known_hosts
 
       - name: Deploy to server
@@ -24,8 +24,8 @@ jobs:
           SSH_AUTH_SOCK: /tmp/ssh-agent.sock
         run: |
           # Sync the updated code with the server
-          rsync -avz --delete-after --exclude '.git' --exclude '__pycache__' . user@your_server_ip:/path/to/your/app
+          rsync -avz --delete-after --exclude '.git' --exclude '__pycache__' . root@:161.35.204.244/webapps/chores-tracker/
 
           # SSH into server and run the restart script
-          ssh user@your_server_ip 'cd /path/to/your/app && ./restart.sh'
+          ssh root@161.35.204.244 'cd /webapps/chores-tracker && ./restart.sh'
 
